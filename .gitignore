@@ -1,0 +1,29 @@
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Build output
+dist/
+build/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Coverage reports
+coverage/
+.nyc_output/
