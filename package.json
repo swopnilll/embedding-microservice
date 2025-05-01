@@ -1,0 +1,31 @@
+{
+  "name": "embeddings-microservice",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node src/server.ts",
+    "dev": "nodemon src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.796.0",
+    "bottleneck": "^2.19.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "langchain": "^0.3.24",
+    "openai": "^4.96.0",
+    "pg": "^8.15.5",
+    "postgres": "^3.4.5",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.1",
+    "@types/pg": "^8.11.14",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
