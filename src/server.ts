@@ -1,6 +1,4 @@
 import express from "express";
-import { Request, Response, NextFunction } from "express";
-// import { startEmbeddingConsumer } from "./consumers/embeddingConsumer";
 import { logger } from "./utils/logger";
 
 import generateEmbeddingRouter from "./routes/generateEmbeddingRoutes";
@@ -24,5 +22,4 @@ app.use("/api", generateEmbeddingRouter);
 
 app.listen(PORT, () => {
   logger.info(`Embedding microservice running on port ${PORT}`);
-  //   startEmbeddingConsumer();
 });
