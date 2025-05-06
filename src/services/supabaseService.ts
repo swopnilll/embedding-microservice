@@ -15,20 +15,19 @@ export async function insertEmbeddingChunk({
 }: {
   chunk_index: number;
   chunk_text: string;
-  embedding: number[];
+  embedding: string;
   source_type: string;
   source_id: string;
 }) {
   try {
-    const id = uuidv4();
     await sql`
       INSERT INTO knowledge_base (
-        id, source_id, source_type, chunk_index, chunk_text, embedding
+       source_id, source_type, chunk_index, chunk_text, embedding
       ) VALUES (
-        ${id}, ${source_id}, ${source_type}, ${chunk_index}, ${chunk_text}, ${embedding}
+       ${source_id}, ${source_type}, ${chunk_index}, ${chunk_text}, ${embedding}
       )
     `;
-    return { id, chunk_index };
+    return { chunk_index };
   } catch (error) {
     logger.error("Database insert failed", error);
     throw new Error("Failed to insert embedding to DB");
@@ -36,8 +35,8 @@ export async function insertEmbeddingChunk({
 }
 
 export async function fetchDataFromDatabase(
-  projectId: string,
-  ticketId: string
+  ticketId: string,
+  projectId: string
 ) {
   try {
     // Fetch project

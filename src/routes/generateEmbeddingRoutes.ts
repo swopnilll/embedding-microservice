@@ -1,6 +1,4 @@
-import express, { Request, Response } from "express";
-import { fetchAndEmbedData } from "../consumers/embeddingConsumer";
-import { logger } from "../utils/logger";
+import express from "express";
 import { generateEmbeddingController } from "../controller/embeddingController";
 
 const generateEmbeddingRouter = express.Router();

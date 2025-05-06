@@ -13,7 +13,7 @@ import { fetchDataFromDatabase } from "../services/supabaseService";
 async function fetchData(taskId: string, ProjectId: string) {
   //add logic to fetch data from supabase and convert it to string
   //first fetch project information and then tasks information
-  //convert the jason to text
+  //convert the json to text
 
   try {
     const combinedText = await fetchDataFromDatabase(taskId, ProjectId);
@@ -28,11 +28,12 @@ export async function fetchAndEmbedData(taskId: string, ProjectId: string) {
   const source_type = "Project";
   try {
     const text = await fetchData(taskId, ProjectId);
-    await embedAndStoreText({
+    const embeddings = await embedAndStoreText({
       text: text,
       source_type: source_type,
       source_id: taskId,
     });
+    return embeddings;
   } catch (err) {
     logger.error(`Error while fetching and embedding the data ${err}`);
     throw new Error("Error in fetching and embedding the data.");

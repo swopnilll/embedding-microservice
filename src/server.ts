@@ -1,9 +1,8 @@
 import express from "express";
-import { Request, Response, NextFunction } from "express";
-// import { startEmbeddingConsumer } from "./consumers/embeddingConsumer";
 import { logger } from "./utils/logger";
 
 import generateEmbeddingRouter from "./routes/generateEmbeddingRoutes";
+import queryRouter from "./routes/queryRoutes";
 
 const app = express();
 
@@ -22,7 +21,8 @@ app.use(express.json());
 
 app.use("/api", generateEmbeddingRouter);
 
+app.use("/api", queryRouter);
+
 app.listen(PORT, () => {
   logger.info(`Embedding microservice running on port ${PORT}`);
-  //   startEmbeddingConsumer();
 });
