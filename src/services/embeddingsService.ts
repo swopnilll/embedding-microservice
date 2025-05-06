@@ -4,13 +4,14 @@ import { CONFIG } from "../config";
 import { chunkText } from "../utils/chunker";
 import { insertEmbeddingChunk } from "./supabaseService";
 import { logger } from "../utils/logger";
+import { Embeddings } from "openai/resources/embeddings.mjs";
 
 const openai = new OpenAI({ apiKey: CONFIG.OPENAI_API_KEY });
 
 // 🔒 Rate limiter: 100ms between calls = 10 req/sec
 const limiter = new Bottleneck({
-  minTime: 100, // adjust based on your OpenAI rate limits
-  maxConcurrent: 1,
+  minTime: 110, // adjust based on your OpenAI rate limits
+  maxConcurrent: 5,
 });
 
 export async function embedAndStoreText({
@@ -35,11 +36,12 @@ export async function embedAndStoreText({
           });
 
           const embedding = response.data[0].embedding;
-
+          const formattedEmbedding = `[${embedding.join(",")}]`;
+          console.log("generated embeddings", embedding);
           const result = await insertEmbeddingChunk({
             chunk_index: index,
             chunk_text: chunk,
-            embedding,
+            embedding: formattedEmbedding,
             source_type,
             source_id,
           });

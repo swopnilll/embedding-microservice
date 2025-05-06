@@ -11,6 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.796.0",
+    "@langchain/community": "^0.3.42",
+    "@langchain/core": "^0.3.53",
+    "@langchain/openai": "^0.5.10",
     "bottleneck": "^2.19.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",

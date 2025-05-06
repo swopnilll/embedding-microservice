@@ -15,7 +15,7 @@ export async function insertEmbeddingChunk({
 }: {
   chunk_index: number;
   chunk_text: string;
-  embedding: number[];
+  embedding: string;
   source_type: string;
   source_id: string;
 }) {
@@ -35,8 +35,8 @@ export async function insertEmbeddingChunk({
 }
 
 export async function fetchDataFromDatabase(
-  projectId: string,
-  ticketId: string
+  ticketId: string,
+  projectId: string
 ) {
   try {
     // Fetch project

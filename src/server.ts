@@ -2,6 +2,7 @@ import express from "express";
 import { logger } from "./utils/logger";
 
 import generateEmbeddingRouter from "./routes/generateEmbeddingRoutes";
+import queryRouter from "./routes/queryRoutes";
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.get("/health", (_, res) => {
 app.use(express.json());
 
 app.use("/api", generateEmbeddingRouter);
+
+app.use("/api", queryRouter);
 
 app.listen(PORT, () => {
   logger.info(`Embedding microservice running on port ${PORT}`);
