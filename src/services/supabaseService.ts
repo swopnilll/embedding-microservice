@@ -10,21 +10,21 @@ export async function insertEmbeddingChunk({
   chunk_index,
   chunk_text,
   embedding,
-  source_type,
-  source_id,
+  project_id,
+  task_id,
 }: {
   chunk_index: number;
   chunk_text: string;
   embedding: string;
-  source_type: string;
-  source_id: string;
+  project_id: number;
+  task_id: number;
 }) {
   try {
     await sql`
       INSERT INTO knowledge_base (
-       source_id, source_type, chunk_index, chunk_text, embedding
+       task_id, project_id, chunk_index, chunk_text, embedding
       ) VALUES (
-       ${source_id}, ${source_type}, ${chunk_index}, ${chunk_text}, ${embedding}
+       ${task_id}, ${project_id}, ${chunk_index}, ${chunk_text}, ${embedding}
       )
     `;
     return { chunk_index };
@@ -35,8 +35,8 @@ export async function insertEmbeddingChunk({
 }
 
 export async function fetchDataFromDatabase(
-  ticketId: string,
-  projectId: string
+  ticketId: number,
+  projectId: number
 ) {
   try {
     // Fetch project
@@ -58,5 +58,39 @@ export async function fetchDataFromDatabase(
   } catch (error) {
     logger.error("Error in fetching data from database", error);
     throw new Error("Error in fetching data from database");
+  }
+}
+
+export async function bulkInsertEmbeddingChunks(
+  chunks: {
+    chunk_index: number;
+    chunk_text: string;
+    embedding: string;
+    project_id: number;
+    task_id: number;
+  }[]
+) {
+  if (chunks.length === 0) return;
+
+  const values = chunks.map(
+    ({ task_id, project_id, chunk_index, chunk_text, embedding }) => [
+      task_id,
+      project_id,
+      chunk_index,
+      chunk_text,
+      embedding,
+    ]
+  );
+
+  try {
+    await sql`
+      INSERT INTO knowledge_base (
+        task_id, project_id, chunk_index, chunk_text, embedding
+      ) VALUES ${sql(values)}
+    `;
+    return { inserted: chunks.length };
+  } catch (error) {
+    logger.error("Bulk insert failed", error);
+    throw new Error("Failed to insert embeddings");
   }
 }

@@ -5,6 +5,7 @@ import { CONFIG } from "../config";
 import { logger } from "../utils/logger";
 const embeddings = new OpenAIEmbeddings({
   openAIApiKey: CONFIG.OPENAI_API_KEY,
+  model: CONFIG.EMBEDDING_MODEL,
 });
 
 export async function initVectorStore() {

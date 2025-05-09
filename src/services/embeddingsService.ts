@@ -2,7 +2,10 @@ import OpenAI from "openai";
 import Bottleneck from "bottleneck";
 import { CONFIG } from "../config";
 import { chunkText } from "../utils/chunker";
-import { insertEmbeddingChunk } from "./supabaseService";
+import {
+  bulkInsertEmbeddingChunks,
+  insertEmbeddingChunk,
+} from "./supabaseService";
 import { logger } from "../utils/logger";
 import { Embeddings } from "openai/resources/embeddings.mjs";
 
@@ -16,18 +19,18 @@ const limiter = new Bottleneck({
 
 export async function embedAndStoreText({
   text,
-  source_type,
-  source_id,
+  project_id,
+  task_id,
 }: {
   text: string;
-  source_type: string;
-  source_id: string;
+  project_id: number;
+  task_id: number;
 }) {
   try {
     const chunks = await chunkText(text);
-    console.log("chunks", chunks);
+    // console.log("chunks", chunks);
 
-    const results = await Promise.all(
+    const embeddingData = await Promise.all(
       chunks.map((chunk, index) =>
         limiter.schedule(async () => {
           const response = await openai.embeddings.create({
@@ -37,21 +40,20 @@ export async function embedAndStoreText({
 
           const embedding = response.data[0].embedding;
           const formattedEmbedding = `[${embedding.join(",")}]`;
-          console.log("generated embeddings", embedding);
-          const result = await insertEmbeddingChunk({
+
+          return {
             chunk_index: index,
             chunk_text: chunk,
             embedding: formattedEmbedding,
-            source_type,
-            source_id,
-          });
-
-          return result;
+            project_id,
+            task_id,
+          };
         })
       )
     );
-
-    return results;
+    console.log(embeddingData);
+    await bulkInsertEmbeddingChunks(embeddingData);
+    return { message: "Embeddings stored", count: embeddingData.length };
   } catch (error) {
     logger.error("Embedding process failed", error);
     throw new Error("Failed to process embeddings");

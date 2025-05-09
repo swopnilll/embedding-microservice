@@ -10,7 +10,7 @@ import { logger } from "../utils/logger";
 import { fetchDataFromDatabase } from "../services/supabaseService";
 
 // TODO: replace this fetching logic with Mail queue logic . Below is the example code commented out.
-async function fetchData(taskId: string, ProjectId: string) {
+async function fetchData(taskId: number, ProjectId: number) {
   //add logic to fetch data from supabase and convert it to string
   //first fetch project information and then tasks information
   //convert the json to text
@@ -24,14 +24,13 @@ async function fetchData(taskId: string, ProjectId: string) {
   }
 }
 
-export async function fetchAndEmbedData(taskId: string, ProjectId: string) {
-  const source_type = "Project";
+export async function fetchAndEmbedData(taskId: number, ProjectId: number) {
   try {
     const text = await fetchData(taskId, ProjectId);
     const embeddings = await embedAndStoreText({
       text: text,
-      source_type: source_type,
-      source_id: taskId,
+      project_id: ProjectId,
+      task_id: taskId,
     });
     return embeddings;
   } catch (err) {

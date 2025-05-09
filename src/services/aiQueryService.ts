@@ -6,8 +6,7 @@ import { CONFIG } from "../config";
 export async function getQueryResponse(query: string) {
   try {
     const vectorStore = await initVectorStore();
-
-    const results = await vectorStore.similaritySearch(query, 5);
+    const results = await vectorStore.similaritySearch("test", 5);
 
     const model = new ChatOpenAI({
       openAIApiKey: CONFIG.OPENAI_API_KEY,
@@ -18,6 +17,8 @@ export async function getQueryResponse(query: string) {
 
     const context = results.map((r) => r.pageContent).join("\n");
 
+    console.log("context", context);
+
     const messages = [
       {
         role: "system",
@@ -27,22 +28,21 @@ export async function getQueryResponse(query: string) {
         role: "user",
         content: `
             Use the following context to answer the user's question.
-  
+
             Context:
             ${context}
-  
+
             Question:
             ${query}
           `,
       },
     ];
 
-    let finalAnswer = ""; // Initialize as empty string
+    let finalAnswer = "";
     let fullResponse = "";
 
     const stream = await model.stream(messages);
 
-    // Use a for-await loop to iterate over the stream
     for await (const chunk of stream) {
       const content = chunk.content;
       if (content) {
