@@ -3,10 +3,11 @@ import { logger } from "./utils/logger";
 
 import generateEmbeddingRouter from "./routes/generateEmbeddingRoutes";
 import queryRouter from "./routes/queryRoutes";
+import { startEmbeddingConsumer } from "./consumers/consumer";
 
 const app = express();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3002;
 
 app.get("/health", (_, res) => {
   try {
@@ -25,4 +26,5 @@ app.use("/api", queryRouter);
 
 app.listen(PORT, () => {
   logger.info(`Embedding microservice running on port ${PORT}`);
+   startEmbeddingConsumer();
 });
