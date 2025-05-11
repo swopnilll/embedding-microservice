@@ -49,14 +49,14 @@ export async function fetchDataFromDatabase(
       const projectRes =
         await sql`SELECT * FROM "Project" WHERE project_id = ${projectId}`;
       if (projectRes?.length === 0) throw new Error("Project not found.");
-      combinedText += jsonToText(projectRes[0]);
+      combinedText += `Project Details:\n${jsonToText(projectRes[0])}\n\n`;
     }
 
     if (ticketId) {
       const ticketRes =
         await sql`SELECT * FROM "Ticket" WHERE ticket_id = ${ticketId}`;
       if (ticketRes?.length === 0) throw new Error("Ticket not found.");
-      combinedText += jsonToText(ticketRes[0]);
+      combinedText += `Task Details:\n${jsonToText(ticketRes[0])}\n\n`;
     }
 
     logger.info(

@@ -27,6 +27,7 @@ async function fetchData(taskId: number, ProjectId: number) {
 export async function fetchAndEmbedData(taskId: number, ProjectId: number) {
   try {
     const text = await fetchData(taskId, ProjectId);
+
     const embeddings = await embedAndStoreText({
       text: text,
       project_id: ProjectId,

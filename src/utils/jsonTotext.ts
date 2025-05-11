@@ -3,16 +3,13 @@ export function jsonToText(obj: any): string {
     return String(obj);
   }
 
+  const keysToInclude = ["name", "title", "description", "status"];
+
   try {
-    // Pretty stringify JSON and flatten into plain text
-    return Object.entries(obj)
-      .map(([key, value]) => {
-        if (typeof value === "object" && value !== null) {
-          return `${key}: ${jsonToText(value)}`; // Recursive flattening
-        }
-        return `${key}: ${value}`;
-      })
-      .join("\n");
+    return keysToInclude
+      .filter((key) => key in obj && obj[key])
+      .map((key) => `${key}: ${obj[key]}`)
+      .join(". ");
   } catch (error) {
     return "Invalid JSON structure.";
   }

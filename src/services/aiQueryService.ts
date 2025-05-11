@@ -6,7 +6,8 @@ import { CONFIG } from "../config";
 export async function getQueryResponse(query: string) {
   try {
     const vectorStore = await initVectorStore();
-    const results = await vectorStore.similaritySearch("test", 5);
+
+    const results = await vectorStore.similaritySearch(query, 5);
 
     const model = new ChatOpenAI({
       openAIApiKey: CONFIG.OPENAI_API_KEY,
@@ -16,8 +17,6 @@ export async function getQueryResponse(query: string) {
     });
 
     const context = results.map((r) => r.pageContent).join("\n");
-
-    console.log("context to openai", context);
 
     const messages = [
       {

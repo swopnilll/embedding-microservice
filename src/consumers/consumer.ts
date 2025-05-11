@@ -19,7 +19,9 @@ const testConnection = async () => {
     await receiver.peekMessages(1);
 
     // Log success if no errors occur
-    logger.info(`Successfully connected to Azure Service Bus and the queue '${queueName}' is ready for message consumption.`);
+    logger.info(
+      `Successfully connected to Azure Service Bus and the queue '${queueName}' is ready for message consumption.`
+    );
   } catch (error) {
     // Log failure if an error occurs while connecting or peeking messages
     if (error instanceof Error) {
@@ -47,7 +49,9 @@ export const startEmbeddingConsumer = async () => {
     try {
       const payload = message.body as EmbeddingJobPayload;
 
-      logger.info(`Received embedding job: projectId=${payload.projectId}, taskId=${payload.taskId}`);
+      logger.info(
+        `Received embedding job: projectId=${payload.projectId}, taskId=${payload.taskId}`
+      );
 
       await fetchAndEmbedData(payload.taskId, payload.projectId);
 
@@ -59,7 +63,10 @@ export const startEmbeddingConsumer = async () => {
   };
 
   const errorHandler = async (args: ProcessErrorArgs): Promise<void> => {
-    logger.error(`Error in Azure Service Bus receiver: ${args.error.message}`, args.error);
+    logger.error(
+      `Error in Azure Service Bus receiver: ${args.error.message}`,
+      args.error
+    );
   };
 
   receiver.subscribe(
