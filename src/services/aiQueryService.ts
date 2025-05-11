@@ -17,7 +17,7 @@ export async function getQueryResponse(query: string) {
 
     const context = results.map((r) => r.pageContent).join("\n");
 
-    console.log("context", context);
+    console.log("context to openai", context);
 
     const messages = [
       {

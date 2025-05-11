@@ -35,25 +35,36 @@ export async function insertEmbeddingChunk({
 }
 
 export async function fetchDataFromDatabase(
-  ticketId: number,
-  projectId: number
+  ticketId?: number,
+  projectId?: number
 ) {
   try {
-    // Fetch project
-    const projectRes =
-      await sql`SELECT * from "Project" where project_id=${projectId}`;
-    if (projectRes?.length == 0) throw new Error("Project not found.");
+    if (!ticketId && !projectId) {
+      throw new Error("Either ticketId or projectId must be provided.");
+    }
 
-    // Fetch ticket
-    const ticketRes =
-      await sql`SELECT * from "Ticket" where ticket_id=${ticketId}`;
-    if (ticketRes?.length == 0) throw new Error("Ticket not found.");
+    let combinedText = "";
 
-    const combinedText = jsonToText(projectRes[0]) + jsonToText(ticketRes[0]);
+    if (projectId) {
+      const projectRes =
+        await sql`SELECT * FROM "Project" WHERE project_id = ${projectId}`;
+      if (projectRes?.length === 0) throw new Error("Project not found.");
+      combinedText += jsonToText(projectRes[0]);
+    }
+
+    if (ticketId) {
+      const ticketRes =
+        await sql`SELECT * FROM "Ticket" WHERE ticket_id = ${ticketId}`;
+      if (ticketRes?.length === 0) throw new Error("Ticket not found.");
+      combinedText += jsonToText(ticketRes[0]);
+    }
 
     logger.info(
-      `Fetched project ${projectId} and ticket ${ticketId} successfully.`
+      `Fetched ${projectId ? `project ${projectId}` : ""}${
+        projectId && ticketId ? " and " : ""
+      }${ticketId ? `ticket ${ticketId}` : ""} successfully.`
     );
+
     return combinedText;
   } catch (error) {
     logger.error("Error in fetching data from database", error);
@@ -78,7 +89,7 @@ export async function bulkInsertEmbeddingChunks(
       project_id,
       chunk_index,
       chunk_text,
-      embedding,
+      embedding, // pgvector accepts native float[]
     ]
   );
 
