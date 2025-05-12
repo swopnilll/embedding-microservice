@@ -7,7 +7,6 @@ import {
   insertEmbeddingChunk,
 } from "./supabaseService";
 import { logger } from "../utils/logger";
-import { Embeddings } from "openai/resources/embeddings.mjs";
 
 const openai = new OpenAI({ apiKey: CONFIG.OPENAI_API_KEY });
 
@@ -51,7 +50,6 @@ export async function embedAndStoreText({
         })
       )
     );
-    console.log(embeddingData);
     await bulkInsertEmbeddingChunks(embeddingData);
     return { message: "Embeddings stored", count: embeddingData.length };
   } catch (error) {
