@@ -9,4 +9,7 @@ export const CONFIG = {
   EMBEDDING_MODEL: "text-embedding-3-small",
   SERVICE_BUS_PRIMARY_KEY: process.env.SERVICE_BUS_PRIMARY_KEY!,
   SERVICE_BUS_CONNECTION_STRING: process.env.SERVICE_BUS_CONNECTION_STRING!,
+  SERVICE_BUS_Endpoint: process.env.SERVICE_BUS_Endpoint,
+  SERVICE_BUS_SharedAccessKeyName: process.env.SERVICE_BUS_SharedAccessKeyName,
+  SERVICE_BUS_SharedAccessKey: process.env.SERVICE_BUS_SharedAccessKey,
 };
